@@ -1,4 +1,4 @@
-import "./header.css"
+import "./Header.css"
 import $ from 'jquery'
 import openIcon from "../../assets/open.png"
 import closeIcon from "../../assets/close.png"
