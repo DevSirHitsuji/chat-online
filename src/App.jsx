@@ -12,11 +12,12 @@ function App() {
   const [messages, setMessages] = useState([]) ;
   const socket = useRef(null);
 
-// wss://server-chat-online.onrender.com"
+// wss://server-chat-online.onrender.com
 // ws://localhost:3000
+// ws://192.168.0.98:3000
 
   useEffect(() => {
-    socket.current = new WebSocket("wss://server-chat-online.onrender.com");
+    socket.current = new WebSocket("ws://192.168.0.98:3000");
     
     socket.current.onmessage = event => {
       const data = JSON.parse(event.data);
@@ -30,7 +31,7 @@ function App() {
         setUsers(data.content);
       }
 
-      if (data.type == "message"){ 
+      if (data.type == "message"){
         setMessages(prevMessages => [...prevMessages, data]);
       }
       
@@ -63,7 +64,7 @@ function App() {
         $(".online").show();
         setTimeout(() => {
           $(".online").hide();
-          document.querySelector(".reload").click();
+          location.reload();
         }, 3000)     
       }
 
@@ -87,9 +88,17 @@ function App() {
     let name = localStorage.getItem("username");
     if (name) {
       setUsername(name);
+      $(".input-username-loading").show();
+      $(".input-username-box").hide()
+
       setTimeout(() => {
         document.querySelector(".send-username").click()
-      }, 500) 
+        setTimeout(() => {
+          $(".input-username-loading").hide();
+          $(".input-username-box").show()
+        }, 500)
+        
+      }, 1000) 
     }
   }, [])
 
@@ -150,9 +159,14 @@ function App() {
         />
 
         <div className='input-username'>
+
+          <div className='input-username-loading'>
+              <h2>Loading...</h2>
+          </div>
+
           <div className='input-username-box'>
             <span className='userexist'></span>
-            <input onFocus={true} onKeyDown={sendUsernameEnter} className='username' type="text" placeholder='username...' maxLength={20} onChange={(e) => {setUsername(e.target.value)}}/>
+            <input onKeyDown={sendUsernameEnter} className='username' type="text" placeholder='username...' maxLength={20} onChange={(e) => {setUsername(e.target.value)}}/>
             <button className='send-username' onClick={sendUsername}>entrar</button>
           </div>
         </div>
