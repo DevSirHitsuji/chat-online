@@ -13,6 +13,12 @@ export default function header(props) {
         $(".users-list").show();
     }
 
+    function disconect() {
+        let name = localStorage.getItem("username")
+        props.socket.send(JSON.stringify({"type": "logout", "content": `${name} disconected`}))
+        localStorage.setItem("username", "");
+    }
+
     return (
         <div id="menu">
             <header className="app-header">
@@ -24,13 +30,13 @@ export default function header(props) {
                 <div className="users-list-header">
                    <h2>Usuários online</h2>
                    <button onClick={closeMenu}>
-                    <img src={closeIcon} alt="" srcset="" />
+                    <img src={closeIcon} alt="close .icon"/>
                    </button>
                 </div>
                 
                 <div className="users">
                     {props.users.map((user, index) => (
-                        <p key={index}>{user}</p>
+                        <div className="" key={index}>{props.username == user ? <p>você <button className="disconect" onClick={() => disconect()}>sair</button></p> : <p>{user} <button className="ballgreen"></button></p>}</div>
                     ))}
                 </div>
             </div>

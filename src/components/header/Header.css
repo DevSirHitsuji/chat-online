@@ -67,3 +67,16 @@
     margin: 0px;
     width: 30%;
 }
+
+.disconect {
+    padding: 2px;
+    padding-inline: 5px;
+    background-color: #9c0000;
+}
+
+.ballgreen {
+    width: 10px;
+    height: 10px;
+    background-color: greenyellow;
+    border-radius: 20px;
+}
