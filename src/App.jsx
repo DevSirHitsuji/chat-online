@@ -14,10 +14,9 @@ function App() {
 
 // wss://server-chat-online.onrender.com
 // ws://localhost:3000
-// ws://192.168.0.98:3000
 
   useEffect(() => {
-    socket.current = new WebSocket("ws://192.168.0.98:3000");
+    socket.current = new WebSocket("wss://server-chat-online.onrender.com");
     
     socket.current.onmessage = event => {
       const data = JSON.parse(event.data);
