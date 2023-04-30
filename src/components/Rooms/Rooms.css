@@ -1,0 +1,14 @@
+.room {
+    display: flex;
+    justify-content: center;
+    
+    margin-top: 40px;
+    padding: 20px;
+
+    background-color: rgba(255, 255, 255, 0.128);
+    border-bottom: solid 2px rgba(0, 0, 0, 0.172);
+}
+
+.room:hover {
+    opacity: 0.5;
+}

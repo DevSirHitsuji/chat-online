@@ -1,0 +1,41 @@
+.chat {
+    display: flex;
+    flex-direction: column;
+    padding-inline: 5px;
+    padding-block: 10px;
+    margin-bottom: 50px;
+    margin-top: -50px;
+}
+
+.chat > span {
+    margin-inline: auto;
+    margin-top: 100px;
+}
+
+
+.chat-message {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-message > * > *, .chat-message > * {
+    margin: 0px;
+}
+
+.chat-message .chat-message-data {
+    display: flex;
+}
+
+.chat-message-data .data-username {
+    margin-right: 10px;
+}
+
+.message-content {
+    background-color: rgba(255, 255, 255, 0.18);
+    padding-inline: 5px;
+    padding-block: 5px;
+    border-radius: 10px;
+    width: fit-content;
+    word-break: break-all;
+}

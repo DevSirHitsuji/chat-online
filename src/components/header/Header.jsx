@@ -1,7 +1,9 @@
 import "./Header.css"
 import $ from 'jquery'
+
 import openIcon from "../../assets/open.png"
 import closeIcon from "../../assets/close.png"
+import backIcon from "../../assets/back.png"
 
 export default function header(props) {
 
@@ -22,6 +24,13 @@ export default function header(props) {
     return (
         <div id="menu">
             <header className="app-header">
+                {props.inChat ?
+                <button className="button-back" onClick={props.backToRooms}>
+                    <img src={backIcon} alt="back .icon" />
+                </button> :
+                ""
+                }
+                
                 <button className="button-menu" onClick={openMenu}>
                     <img src={openIcon} alt="open .icon" />
                 </button>

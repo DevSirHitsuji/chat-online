@@ -1,14 +1,27 @@
 import React, { useEffect, useRef, useState } from 'react'
 import $ from 'jquery'
-import iconSend from "./assets/send.png"
+
+
+
 import Header from './components/header/Header'
 import './App.css'
 
+// assets
+import blop from "./assets/sounds/res.mp3"
+
+//functions import 
+import getHour from './controllers/getHour'
+import Chat from './components/Chat/Chat'
+import Rooms from './components/Rooms/Rooms'
+import InputMessage from './components/InputMessage/InputMessage'
 
 function App() {
   const [message, setMessage] = useState("");
   const [username, setUsername] = useState("");
   const [users, setUsers] = useState([]);
+  const [rooms, setRooms] = useState([]);
+  const [chatId, setChatId] = useState("");
+  const [inChat, setInChat] = useState(false);
   const [messages, setMessages] = useState([]) ;
   const socket = useRef(null);
 
@@ -16,11 +29,11 @@ function App() {
 // ws://localhost:3000
 
   useEffect(() => {
-    socket.current = new WebSocket("wss://server-chat-online.onrender.com");
+    socket.current = new WebSocket("ws://localhost:3000");
     
     socket.current.onmessage = event => {
       const data = JSON.parse(event.data);
-      
+
       if (data.type == "sucess") {
         localStorage.setItem("username", data.content);
         $(".input-username").hide();
@@ -30,8 +43,17 @@ function App() {
         setUsers(data.content);
       }
 
+      if (data.type == "rooms") {
+        setRooms(data.content);
+      }
+
       if (data.type == "message"){
+        $(".sound-notify")[0].play();
         setMessages(prevMessages => [...prevMessages, data]);
+      }
+
+      if (data.type == "loadRoom") {
+        setMessages(data.content);
       }
       
       if (data.type == "failed") {
@@ -51,11 +73,13 @@ function App() {
       }
 
       if (data.type == "offline") {
-        $(".online").text(`${data.content} saiu`);
-        $(".online").show();
-        setTimeout(() => {
-          $(".online").hide();
-        }, 3000)
+        if (data.content) {
+          $(".online").text(`${data.content} saiu`);
+          $(".online").show();
+          setTimeout(() => {
+            $(".online").hide();
+          }, 3000)
+        }
       }
 
       if (data.type == "logout") {
@@ -95,32 +119,32 @@ function App() {
         setTimeout(() => {
           $(".input-username-loading").hide();
           $(".input-username-box").show()
-        }, 500)
-        
+        }, 1000)     
       }, 1000) 
     }
   }, [])
-
-  function getDate() {
-    let currentDate = new Date;
-    let hour = (currentDate.getHours()<10 ? '0' : "") + currentDate.getHours();
-    let minutes = (currentDate.getMinutes()<10 ? '0' : "") + currentDate.getMinutes();
-    return `${hour}:${minutes}`
-  }
 
   function sendMessage() {
     if (message.trim() !== '') {
       const Message = {
         "type" : "message",
+        "roomId" : chatId,
         "content" : message.trim(),
-        "date" : getDate(),
+        "date" : getHour(),
         "username": localStorage.getItem("username")
       }
-
       socket.current.send(JSON.stringify(Message));
       setMessage("");
       $(".message").val(['']);
     }
+  }
+
+  function sendRoom(id) {
+    const Room = {
+      "type" : "getRoom", 
+      "id" : id
+    }
+    socket.current.send(JSON.stringify(Room))
   }
 
   function sendUsername() {
@@ -151,10 +175,16 @@ function App() {
     <>
       <main>
         <form action=""><input className='reload' type='submit' value={"oi"}></input></form>
+        <audio className='sound-notify' src={blop}></audio>
         <Header 
           users={users}
+          inChat={inChat}
           socket={socket.current}
           username={localStorage.getItem("username")}
+          backToRooms={() => {
+            $(".send-message").hide();
+            setInChat(false);
+          }}
         />
 
         <div className='input-username'>
@@ -172,23 +202,27 @@ function App() {
 
         <span className='online'></span>
 
-        <section className='chat'>
-          {messages.map((message, index) => (
-              <div id={message.username + index} className={`chat-message ${localStorage.getItem("username") == message.username ? "right" : "left"}`} key={index}>
-                <div className='chat-message-data'>
-                  <p className='data-username'>{localStorage.getItem("username") == message.username ? "você" : message.username}</p>
-                  <p className='data-hour'>{message.date}</p>
-                </div>             
-                <p className='message-content'>{message.content}</p>
-              </div>     
-            ))}
-        </section>
-        <div className='send-message'>
-          <textarea onKeyDown={sendMessageEnter} className='message' type="text" placeholder='mensagem...' onChange={(e) => {setMessage(e.target.value)}}></textarea>
-          <button onClick={sendMessage} className='btn-send' type="button">
-            <img src={iconSend} alt="send .icon"/>
-          </button>
-        </div>
+        {inChat ? 
+          <Chat 
+            messages={messages}
+          /> : 
+          <Rooms 
+            rooms={rooms}
+            enterChat={(id) => {
+              $(".send-message").css("display", "flex")
+              sendRoom(id);
+              setChatId(id)
+              setInChat(true)
+            }}
+          />
+        }
+        
+        <InputMessage 
+          sendMessageEnter={sendMessageEnter}
+          sendMessage={sendMessage}
+          setMessage={setMessage}
+        /> 
+
       </main>
     </>
   )
