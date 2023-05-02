@@ -16,7 +16,7 @@ import Header from './components/header/Header'
 import Chat from './components/Chat/Chat'
 import Rooms from './components/Rooms/Rooms'
 import InputMessage from './components/InputMessage/InputMessage'
-import Login from './components/login/login'
+import Login from './components/Login/Login'
 import CreateRoom from './components/CreateRoom/CreateRoom'
 
 function App() {
