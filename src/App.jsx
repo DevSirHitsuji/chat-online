@@ -33,7 +33,7 @@ function App() {
 // ws://localhost:3000
 
   useEffect(() => {
-    socket.current = new WebSocket("wss://server-chat-online.onrender.com");
+    socket.current = new WebSocket("wss://server-chat-online.onrender.com/");
     
     socket.current.onmessage = event => {
       const data = JSON.parse(event.data);
