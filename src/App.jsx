@@ -1,9 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
 import $ from 'jquery'
-
-
-
-import Header from './components/Header/Header'
 import './App.css'
 
 // assets
@@ -14,6 +10,9 @@ import plus from "./assets/plus.png"
 
 //functions import 
 import getHour from './controllers/getHour'
+
+//components import
+import Header from './components/Header/Header'
 import Chat from './components/Chat/Chat'
 import Rooms from './components/Rooms/Rooms'
 import InputMessage from './components/InputMessage/InputMessage'
