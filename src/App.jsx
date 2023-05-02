@@ -12,7 +12,7 @@ import plus from "./assets/plus.png"
 import getHour from './controllers/getHour'
 
 //components import
-import Header from './components/Header/Header'
+import Header from './components/header/Header'
 import Chat from './components/Chat/Chat'
 import Rooms from './components/Rooms/Rooms'
 import InputMessage from './components/InputMessage/InputMessage'
