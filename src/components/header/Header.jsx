@@ -38,7 +38,7 @@ export default function header(props) {
             <div className="users-list">
                 <div className="users-list-header">
                    <h2>Usuários online</h2>
-                   <button onClick={closeMenu}>
+                   <button className="button-close" onClick={closeMenu}>
                     <img src={closeIcon} alt="close .icon"/>
                    </button>
                 </div>

@@ -53,6 +53,15 @@
     }
 }
 
+.button-close {
+    width: 7%;
+}
+
+.button-close > img {
+    width: 100%;
+    height: auto;
+}
+
 .users-list {
     display: none;
     position: absolute;
@@ -60,6 +69,9 @@
     width: 100vw;
     height: 50vh;
     max-width: 425px;
+
+    z-index: 1;
+
     background: linear-gradient(var(--primary-color), var(--primary-color), transparent);
     color: rgb(255, 255, 255);
 

@@ -3,17 +3,22 @@ import $ from 'jquery'
 
 
 
-import Header from './components/header/Header'
+import Header from './components/Header/Header'
 import './App.css'
 
 // assets
 import blop from "./assets/sounds/res.mp3"
+import swish from "./assets/sounds/sent.mp3"
+import plus from "./assets/plus.png"
+
 
 //functions import 
 import getHour from './controllers/getHour'
 import Chat from './components/Chat/Chat'
 import Rooms from './components/Rooms/Rooms'
 import InputMessage from './components/InputMessage/InputMessage'
+import Login from './components/login/login'
+import CreateRoom from './components/CreateRoom/CreateRoom'
 
 function App() {
   const [message, setMessage] = useState("");
@@ -29,7 +34,7 @@ function App() {
 // ws://localhost:3000
 
   useEffect(() => {
-    socket.current = new WebSocket("ws://localhost:3000");
+    socket.current = new WebSocket("wss://server-chat-online.onrender.com");
     
     socket.current.onmessage = event => {
       const data = JSON.parse(event.data);
@@ -44,11 +49,18 @@ function App() {
       }
 
       if (data.type == "rooms") {
-        setRooms(data.content);
+        setRooms(data.content); 
       }
 
       if (data.type == "message"){
-        $(".sound-notify")[0].play();
+        let name = localStorage.getItem("username");
+
+        if (data.username == name) {
+          $(".sound-sent")[0].play()
+        } else {
+          $(".sound-res")[0].play();
+        }
+
         setMessages(prevMessages => [...prevMessages, data]);
       }
 
@@ -120,7 +132,7 @@ function App() {
           $(".input-username-loading").hide();
           $(".input-username-box").show()
         }, 1000)     
-      }, 1000) 
+      }, 2000) 
     }
   }, [])
 
@@ -175,30 +187,27 @@ function App() {
     <>
       <main>
         <form action=""><input className='reload' type='submit' value={"oi"}></input></form>
-        <audio className='sound-notify' src={blop}></audio>
+        <audio className='sound-sent' src={swish}></audio>
+        <audio className='sound-res' src={blop}></audio>
+
         <Header 
           users={users}
           inChat={inChat}
           socket={socket.current}
           username={localStorage.getItem("username")}
           backToRooms={() => {
+            setMessages([]);
             $(".send-message").hide();
+            $(".create-room").show()
             setInChat(false);
           }}
         />
 
-        <div className='input-username'>
-
-          <div className='input-username-loading'>
-              <h2>Loading...</h2>
-          </div>
-
-          <div className='input-username-box'>
-            <span className='userexist'></span>
-            <input onKeyDown={sendUsernameEnter} className='username' type="text" placeholder='username...' maxLength={20} onChange={(e) => {setUsername(e.target.value)}}/>
-            <button className='send-username' onClick={sendUsername}>entrar</button>
-          </div>
-        </div>
+        <Login 
+          sendUsernameEnter={sendUsernameEnter}
+          sendUsername={sendUsername}
+          setUsername={setUsername}
+        />
 
         <span className='online'></span>
 
@@ -210,6 +219,7 @@ function App() {
             rooms={rooms}
             enterChat={(id) => {
               $(".send-message").css("display", "flex")
+              $(".create-room").hide()
               sendRoom(id);
               setChatId(id)
               setInChat(true)
@@ -221,7 +231,16 @@ function App() {
           sendMessageEnter={sendMessageEnter}
           sendMessage={sendMessage}
           setMessage={setMessage}
-        /> 
+        />
+
+        <button className='create-room' onClick={() => {$(".new-room").css("display", "flex")}}>
+          <img src={plus} />
+        </button>
+
+        <CreateRoom 
+          users={users}
+          socket={socket.current}
+        />
 
       </main>
     </>

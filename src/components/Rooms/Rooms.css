@@ -1,9 +1,25 @@
+@keyframes slide-down-to-up {
+    0% {
+        margin-top: 100px;
+        opacity: 0;
+    }
+
+    100% {
+        margin-top: 40px;
+        opacity: 1;
+    }
+}
+
+.rooms {
+    margin-top: 40px;
+}
+
 .room {
     display: flex;
-    justify-content: center;
-    
-    margin-top: 40px;
-    padding: 20px;
+    flex-direction: column;
+    height: min-content;
+
+    padding: 5px;
 
     background-color: rgba(255, 255, 255, 0.128);
     border-bottom: solid 2px rgba(0, 0, 0, 0.172);
@@ -11,4 +27,42 @@
 
 .room:hover {
     opacity: 0.5;
+}
+
+.title-room {
+    font-size: 20px;
+    margin: 5px;
+
+}
+
+.preview-message {
+    display: flex;
+    flex-direction: column;
+
+    align-self: flex-end;
+
+    background-color: rgba(0, 0, 0, 0.196);
+    padding: 5px;
+    border-radius: 10px;
+    border-top-left-radius: 0px;
+    z-index: 0;
+    opacity: 0.8;
+    min-width: 80%;
+    max-width: 90%;
+}
+
+.preview-message-data {
+    display: flex;
+}
+
+.preview-message-hour {
+    margin-left: 10px;
+}
+
+.preview-message-content {
+    background-color: rgba(238, 238, 238, 0.16);
+    padding: 5px;
+    border-radius: 10px;
+    max-height: 20px;
+    max-width: 100%;
 }
