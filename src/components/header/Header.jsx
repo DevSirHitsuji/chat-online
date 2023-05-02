@@ -24,13 +24,7 @@ export default function header(props) {
     return (
         <div id="menu">
             <header className="app-header">
-                {props.inChat ?
-                <button className="button-back" onClick={props.backToRooms}>
-                    <img src={backIcon} alt="back .icon" />
-                </button> :
-                ""
-                }
-                
+                {props.inChat ?<button className="button-back" onClick={props.backToRooms}><img src={backIcon} alt="back .icon" /></button> : <p></p>}        
                 <button className="button-menu" onClick={openMenu}>
                     <img src={openIcon} alt="open .icon" />
                 </button>
