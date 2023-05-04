@@ -3,15 +3,20 @@
     --secondary-color: #FF7751;
   }
 
+#menu {
+    background-color: black;
+}
 
 .app-header {
     position: absolute;
+
+    z-index: 1;
     top: 0;
     width: 100vw;
     max-width: 425px;
+
     display: flex;
     justify-content: space-between;
-    background: linear-gradient(rgba(0, 0, 0, 0.341), transparent);
 }
 
 .app-header button {

@@ -67,7 +67,7 @@ export default function CreateRoom(props) {
         <div className="new-room">
             <h2>Novo chat</h2>
             <div className="list-users">
-                <input className="name-room valid" name="name-room" type="text" placeholder={place} maxLength={20}/>
+                <input onKeyDown={props.createRoomEnter} className="name-room valid" name="name-room" type="text" placeholder={place} maxLength={20}/>
                 {props.users.map((user, index) => (
                     
                     <div 

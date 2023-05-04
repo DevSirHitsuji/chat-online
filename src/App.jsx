@@ -28,9 +28,10 @@ function App() {
   const [inChat, setInChat] = useState(false);
   const [messages, setMessages] = useState([]) ;
   const socket = useRef(null);
+  const down = useRef(null)
 
-// wss://server-chat-online.onrender.com
-// ws://localhost:3000
+// wss://server-chat-online.onrender.com/
+// ws://localhost:3000/
 
   useEffect(() => {
     socket.current = new WebSocket("wss://server-chat-online.onrender.com/");
@@ -53,14 +54,17 @@ function App() {
 
       if (data.type == "message"){
         let name = localStorage.getItem("username");
+        let chatId = localStorage.getItem("chatId");
+
+        if (data.roomId == chatId) {
+          setMessages(prevMessages => [...prevMessages, data]);
+        }
 
         if (data.username == name) {
           $(".sound-sent")[0].play()
         } else {
           $(".sound-res")[0].play();
-        }
-
-        setMessages(prevMessages => [...prevMessages, data]);
+        }    
       }
 
       if (data.type == "loadRoom") {
@@ -135,6 +139,16 @@ function App() {
     }
   }, [])
 
+  useEffect(() => {
+    setTimeout(() => {
+      const chat = down.current;
+      if (chat) {
+        $(chat).animate({scrollTop: chat.scrollHeight}, 1000)
+       
+      }
+    }, 50)
+  }, [messages])
+
   function sendMessage() {
     if (message.trim() !== '') {
       const Message = {
@@ -174,6 +188,12 @@ function App() {
     }
   }
 
+  function createRoomEnter(event) {
+    if (event.keyCode === 13) {
+      document.querySelector(".btn-create").click()
+    }
+  }
+
   function sendMessageEnter (event) {
     if (event.keyCode == 16) {
       return ''
@@ -197,7 +217,7 @@ function App() {
           backToRooms={() => {
             setMessages([]);
             $(".send-message").hide();
-            $(".create-room").show()
+            $(".create-room").show();
             setInChat(false);
           }}
         />
@@ -213,6 +233,7 @@ function App() {
         {inChat ? 
           <Chat 
             messages={messages}
+            down={down}
           /> : 
           <Rooms 
             rooms={rooms}
@@ -220,8 +241,9 @@ function App() {
               $(".send-message").css("display", "flex")
               $(".create-room").hide()
               sendRoom(id);
-              setChatId(id)
-              setInChat(true)
+              setChatId(id);
+              localStorage.setItem("chatId", id);
+              setInChat(true);    
             }}
           />
         }
@@ -239,6 +261,7 @@ function App() {
         <CreateRoom 
           users={users}
           socket={socket.current}
+          createRoomEnter={createRoomEnter}
         />
 
       </main>

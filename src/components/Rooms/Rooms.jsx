@@ -4,7 +4,7 @@ export default function Rooms(props) {
     return (
         <div className="rooms">
             {props.rooms.map((room, index) => (
-                <div className="room" key={index} onClick={() => props.enterChat(room.room?.id)} id={room.room?.id}>
+                <div className="room" key={index} onClick={() => {props.enterChat(room.room.id)}} id={room.room?.id}>
                     <p className="title-room">{room.room?.name}</p>
                     {room?.lastMessage ?
                         <div className="preview-message">
